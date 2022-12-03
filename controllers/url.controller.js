@@ -23,15 +23,29 @@ function createUrlObject(req){
 }
 
 
+exports.getAllUrls = async(req,res) => {
+    // console.log("hii all urls");
+    try{
+
+        const all_urls = await urlModel.find({});
+        res.status(200).send(responseData(200,"all the urls with redirections",false,all_urls));
+    }catch(err)
+    {
+        res.status(400).send(responseData(400,err.message,true,all_urls));
+    }
+}
+
+
 exports.createNewRedirection = async (req,res) => {
-    console.log("inside create new redirection");
+    // console.log("inside create new redirection");
     try{
         const urlData = req.body;
         // console.log(userData);
         const urlExist = await urlModel.findOne({url_string:urlData.url_string});
         
+        
         if(urlExist){
-            res.status(200).send(responseData(200,"this url string already exists ! Please try some other string combination",false,urlExist))
+            res.status(200).send(responseData(200,"this url string already exists ! Please try some other string combination",true,urlExist))
         }
         else{
             const url_obj = await urlModel.create(createUrlObject(urlData));
@@ -47,7 +61,7 @@ exports.redirect = async (req,res) => {
     
     try{
         let url_Str = String(req.url).slice(1,);
-        console.log(url_Str);
+        // console.log(url_Str);
         const urlExists = await urlModel.findOne({url_string:url_Str});
         if(urlExists){
             res.status(200).send(responseData(200,"redirection url found",false,urlExists));
