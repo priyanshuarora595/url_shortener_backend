@@ -2,6 +2,8 @@ const mongoose = require("mongoose")
 const {Schema , model} = mongoose;
 const  ObjectId = mongoose.SchemaTypes.ObjectId ;
 
+const urlSchema = require('./url_data').urlSchema;
+
 
 const userAddressSchema = new Schema({
     address_line_1 : String,
@@ -50,6 +52,13 @@ const userSchema = new Schema(
 
         dob : {
             type : String,
+        },
+
+        associated_url :[urlSchema],
+
+        is_admin : { 
+            type:Boolean,
+            default:false
         }
     }
     ,
