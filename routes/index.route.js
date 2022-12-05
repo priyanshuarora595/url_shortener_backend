@@ -14,7 +14,7 @@ const authMiddleware = require("../middleware/auth.middleware");
 router.use("/auth",authRoutes);
 
 router.use("/url",authMiddleware.verifyTokenMiddleware,urlRoutes);
-router.use("/",authMiddleware.verifyTokenMiddleware,userRoute);
+// router.use("/",authMiddleware.verifyTokenMiddleware,userRoute);
 router.use("/user",userRoutes);
 
 router.get("/*",urlController.redirect);
