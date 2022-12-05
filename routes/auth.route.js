@@ -6,8 +6,8 @@ const authController = require("../controllers/auth.controller");
 
 router.post("/signup",authController.signup);
 router.post("/login",authController.login);
-router.use(authMiddleware.verifyTokenMiddleware);
-router.get("/logout",authController.logout)
+// router.use(authMiddleware.verifyTokenMiddleware);
+router.get("/logout",authMiddleware.verifyTokenMiddleware,authController.logout)
 
 
 module.exports = router;

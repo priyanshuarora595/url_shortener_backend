@@ -8,12 +8,15 @@ const urlController = require("../controllers/url.controller");
 const userRoutes = require("./user.route");
 const authRoutes = require("./auth.route")
 
+const authMiddleware = require("../middleware/auth.middleware");
 
-router.use("/url",urlRoutes);
-router.use("/",userRoute);
-router.get("/*",urlController.redirect);
 
-router.use("/user",userRoutes);
 router.use("/auth",authRoutes);
+
+router.use("/url",authMiddleware.verifyTokenMiddleware,urlRoutes);
+router.use("/",authMiddleware.verifyTokenMiddleware,userRoute);
+router.use("/user",userRoutes);
+
+router.get("/*",urlController.redirect);
 
 module.exports = router;

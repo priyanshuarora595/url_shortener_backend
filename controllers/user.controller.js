@@ -20,8 +20,7 @@ exports.getUserDetails = async (req,res) => {
     }
 
     catch(err){
-        console.log(err);
-        res.status(200).send({"ststusCode":200,"message":err.message,"error":ture,"data":null});
+        res.status(200).send({"ststusCode":200,"message":err.message,"error":true,"data":null});
     }
 }
 

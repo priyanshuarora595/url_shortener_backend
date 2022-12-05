@@ -1,5 +1,5 @@
 const userModel = require("../database/models/user").userModel;
-const userPaymentModel = require("../database/models/user").userPaymentModel;
+
 
 const crypto = require("crypto");
 const salt = process.env.SALT;
@@ -35,9 +35,6 @@ function createUserObject(req){
 
 
 exports.login = async (req,res) => {
-    // res.clearCookie("jwt");
-    // res.clearCookie("[object Object]");
-    // console.log("hiii login");
     
     try{
         const userData = req.body;
@@ -59,9 +56,9 @@ exports.login = async (req,res) => {
                     email:userData.username,
                 },process.env.SECRET_KEY);
 
-                res.cookie("jwt",token);
+                // res.cookie("jwt",token);
                 // res.headers.append({"authorization":"Bearer "+token});
-                res.setHeader("authorization","Bearer "+token);
+                // res.setHeader("authorization","Bearer "+token);
                 res.send(responseData(200,"user login success",false,userObj,{token}));
             }
             else{
@@ -104,9 +101,9 @@ exports.signup = async (req,res) => {
                 email:userData.username,
             },process.env.SECRET_KEY);
 
-            res.cookie("jwt",token);
+            // res.cookie("jwt",token);
             // res.headers.append({"authorization":"Bearer "+token});
-            res.setHeader("authorization","Bearer "+token);
+            // res.setHeader("authorization","Bearer "+token);
             res.send(responseData(200,"userObj signup success",false,newUser,{token}));
         }
         }
