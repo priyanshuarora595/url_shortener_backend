@@ -84,7 +84,7 @@ exports.signup = async (req,res) => {
         const userExist = await userModel.findOne({email:userData.email});
         
         if(userExist){
-            res.status(200).send(responseData(200,"userObj already exists ! Please login",false,userExist))
+            res.status(200).send(responseData(400,"user already exists ! Please login",false,userExist))
         }
         else{
 
@@ -104,7 +104,7 @@ exports.signup = async (req,res) => {
             // res.cookie("jwt",token);
             // res.headers.append({"authorization":"Bearer "+token});
             // res.setHeader("authorization","Bearer "+token);
-            res.send(responseData(200,"userObj signup success",false,newUser,{token}));
+            res.send(responseData(200,"user signup success",false,newUser,{token}));
         }
         }
         catch(err){
@@ -117,7 +117,7 @@ exports.signup = async (req,res) => {
 exports.logout = async (req,res) => {
     try{
         res.clearCookie("jwt");
-        res.send(responseData(200,"userObj logout success",false));
+        res.send(responseData(200,"user logout success",false));
     }
     catch(err){
         res.send(responseData(400,err.message,true,"unable to logout"));
