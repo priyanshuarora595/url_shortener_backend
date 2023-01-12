@@ -54,7 +54,7 @@ const userSchema = new Schema(
             type : String,
         },
 
-        associated_url :[urlSchema],
+        associated_url :[String],
 
         is_admin : { 
             type:Boolean,

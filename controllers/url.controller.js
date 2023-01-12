@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
-const  ObjectId = mongoose.Types.ObjectId ;
+const ObjectId = mongoose.Types.ObjectId ;
 const urlModel = require("../database/models/url_data").urlDataModel;
 const userModel = require("../database/models/user").userModel;
+
 
 function responseData(status,message,error,data,extra){
     const obj = {
@@ -26,7 +27,9 @@ function createUrlObject(req){
 
 const insertUrlInUserData = async(req,url_id) => {
     const reqData = req.body;
+    console.log("=======url_id===========",url_id);
     console.log(reqData)
+    url_id = String(url_id);
     const updateUserUrl = await userModel.updateOne({"_id":reqData.owner_user},{ $push: { associated_url: url_id } })
     console.log(updateUserUrl);
 }
@@ -59,6 +62,7 @@ exports.createNewRedirection = async (req,res) => {
         }
         else{
             const url_obj = await urlModel.create(createUrlObject(urlData));
+            console.log(url_obj._id);
             insertUrlInUserData(req,url_obj._id);
             res.status(200).send(responseData(200,"new redirection created successfully!",false,url_obj));
         }
@@ -107,11 +111,11 @@ exports.getUserUrls = async(req,res) => {
 
 exports.deleteUrl = async (req,res) => {
     const reqData = req.body.item;
-    // console.log(reqData);
+    console.log(reqData);
     try{
-        const user_obj = await userModel.updateOne({"_id":new ObjectId(reqData.owner_user)}, { $pull: { associated_url: new ObjectId(reqData._id) } });
-        // console.log("user ubject update = ===============================================",user_obj);
-        const url_obj = await urlModel.deleteOne({"_id" : new ObjectId(reqData._id)})
+        const user_obj = await userModel.updateOne({"_id":ObjectId(reqData.owner_user)}, { $pull: { associated_url: ObjectId(reqData._id) } });
+        console.log("user ubject update = ===============================================",user_obj);
+        const url_obj = await urlModel.deleteOne({"_id" : ObjectId(reqData._id)})
         // console.log("url ubject update = ===============================================",url_obj);
         res.status(200).send(responseData(200,"deletion successful!",false,user_obj));
     }catch(err){

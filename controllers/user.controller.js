@@ -1,5 +1,11 @@
 const userModel = require("../database/models/user").userModel;
+const urlModel = require("../database/models/url_data").urlDataModel;
 
+const salt = process.env.SALT;
+const crypto = require("crypto");
+
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId ;
 
 function responseData(status,message,error,data){
     const obj = {
@@ -40,4 +46,59 @@ exports.setUserDetails = async (req,res) => {
 }
 
 
+const authenticate = (user,email,password) =>{
+    try{
+        
+        if(email){
+            // console.log(userObj);
+            const pass = String(password).concat(salt);
+            const hash = crypto.createHash(process.env.ENCODING_ALGO)
+            hash.update(pass);
+            const hashPassword = hash.digest(process.env.DIGEST_ENCODING);
+            // console.log(hashPassword);
+            // console.log(userObj.password)
+            if(hashPassword==user.password)
+            {
+                return true;
+            }
+        }
+    }
+    catch(err)
+    {
+        console.log(err.message);
+        return false;
+    }
 
+}
+
+
+exports.delUserAccount = async(req,res) => {
+    try{
+        const userData = req.body;
+        console.log(userData);
+        const user = await userModel.findOne({email : userData.email})
+        if(authenticate(user,userData.email,userData.pass))
+        {
+            // console.log(user);
+            try{
+                
+                for(let i of user.associated_url){
+                    // console.log(i)
+                    const url = await urlModel.deleteOne({ "_id":ObjectId(i)});
+                    // console.log(url);
+                }
+            }
+            catch(err){}
+            
+            const del_user = await userModel.deleteOne({email : userData.email})
+
+            res.status(200).send({"message":"User data successfully Deleted","data":del_user})
+        }
+        else{
+            res.status(400).send({error:"unable to authenticate ! Wrong password","data":userData})
+        }
+    }
+    catch(err){
+        res.status(400).send({error:"error caught",error:err.message});
+    }
+}
