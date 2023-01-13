@@ -7,6 +7,9 @@ const urlController = require("../controllers/url.controller");
 
 const userRoutes = require("./user.route");
 const authRoutes = require("./auth.route")
+const password_reset_Routes = require("./password_reset.route");
+
+router.use("/password-reset",password_reset_Routes);
 
 const authMiddleware = require("../middleware/auth.middleware");
 

@@ -2,7 +2,6 @@ const mongoose = require("mongoose")
 const {Schema , model} = mongoose;
 const  ObjectId = mongoose.SchemaTypes.ObjectId ;
 
-const urlSchema = require('./url_data').urlSchema;
 
 
 const userAddressSchema = new Schema({
@@ -68,12 +67,4 @@ const userSchema = new Schema(
 );
 
 
-
-
-
-
 exports.userModel = new model("users",userSchema);
-
-
-
-// module.exports = UserModel;
