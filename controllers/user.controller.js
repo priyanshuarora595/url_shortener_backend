@@ -102,3 +102,27 @@ exports.delUserAccount = async(req,res) => {
         res.status(400).send({error:"error caught",error:err.message});
     }
 }
+
+
+exports.ChangePassword = async(req,res) => {
+    try{
+
+            const data = req.body;
+            console.log(data);
+
+            const user = await userModel.findOne({"_id" : data.userId});
+            if(!user) return res.status(400).send(responseData(400,"user not found",true,data));
+
+            const pass = String(data.pass1).concat(process.env.SALT);
+            const hash = crypto.createHash(process.env.ENCODING_ALGO)
+            hash.update(pass);
+            const hashPassword = hash.digest(process.env.DIGEST_ENCODING);
+            user.password = hashPassword;
+            const updatedUser = await user.save();
+
+            return res.status(200).send(responseData(200,"Password Changed Successfully!",false,updatedUser));
+        }
+        catch(err){
+            return res.status(400).send(responseData(400,"Caught an Error!",true,err));
+        }
+}
